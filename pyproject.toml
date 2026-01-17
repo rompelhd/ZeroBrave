@@ -29,6 +29,9 @@ classifiers = [
 requires-python = ">=3.9"
 dependencies = ["rich>=13.0.0"]
 
+[project.optional-dependencies]
+dev = ["pytest", "pytest-sugar"]
+
 [project.urls]
 Homepage = "https://github.com/rompelhd/ZeroBrave"
 Repository = "https://github.com/rompelhd/ZeroBrave"
