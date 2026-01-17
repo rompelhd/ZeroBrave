@@ -465,8 +465,15 @@ def main() -> int:
     elif args.quiet:
         logging.getLogger().setLevel(logging.ERROR)
     
-    # Launch TUI if requested
-    if args.interactive:
+    # Auto-detect: if no arguments and interactive terminal, launch TUI
+    # This makes the TUI the default experience for interactive use
+    no_args_given = not any([
+        args.dry_run, args.backup, args.restore, args.local,
+        args.skip_checks, args.quiet, args.debug
+    ])
+    is_interactive_terminal = sys.stdin.isatty() and sys.stdout.isatty()
+    
+    if args.interactive or (no_args_given and is_interactive_terminal):
         try:
             from tui import run_tui
         except ImportError:
