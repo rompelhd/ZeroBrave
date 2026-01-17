@@ -21,7 +21,7 @@ from typing import Optional
 import urllib.error
 import urllib.request
 
-__version__ = "1.1.2"
+__version__ = "1.2.0"
 
 SOURCE_URL = "https://raw.githubusercontent.com/rompelhd/ZeroBrave/refs/heads/main/policies.json"
 REQUEST_TIMEOUT = 10  # seconds until the request times out
@@ -441,6 +441,12 @@ def parse_args() -> argparse.Namespace:
         help="Enable debug logging"
     )
     
+    parser.add_argument(
+        "-i", "--interactive",
+        action="store_true",
+        help="Launch interactive TUI for policy configuration"
+    )
+    
     return parser.parse_args()
 
 
@@ -458,6 +464,38 @@ def main() -> int:
         logging.getLogger().setLevel(logging.DEBUG)
     elif args.quiet:
         logging.getLogger().setLevel(logging.ERROR)
+    
+    # Auto-detect: if no arguments and interactive terminal, launch TUI
+    # This makes the TUI the default experience for interactive use
+    no_args_given = not any([
+        args.dry_run, args.backup, args.restore, args.local,
+        args.skip_checks, args.quiet, args.debug
+    ])
+    is_interactive_terminal = sys.stdin.isatty() and sys.stdout.isatty()
+    
+    if args.interactive or (no_args_given and is_interactive_terminal):
+        try:
+            from tui import run_tui
+        except ImportError:
+            logger.error("TUI requires 'rich' library. Install with: pip install rich")
+            return 1
+        
+        target_path = get_policy_path()
+        
+        def apply_callback(policies: dict, dry_run: bool):
+            if args.backup and not dry_run:
+                create_backup(target_path)
+            write_json(target_path, policies, dry_run=dry_run)
+        
+        def backup_callback():
+            create_backup(target_path)
+        
+        run_tui(
+            dry_run=args.dry_run,
+            backup_callback=backup_callback,
+            apply_callback=apply_callback
+        )
+        return 0
     
     try:
         target_path = get_policy_path()

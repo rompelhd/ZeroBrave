@@ -1,4 +1,4 @@
-# ZeroBrave **v1.1.2**
+# ZeroBrave **v1.2.0**
 
 Privacy-focused policy configurator for **Brave Browser**. Disables telemetry, AI features (Leo), and other privacy-invasive settings automatically.
 
@@ -11,34 +11,47 @@ Privacy-focused policy configurator for **Brave Browser**. Disables telemetry, A
 - Prevents sync and browser sign-in
 - Performance optimizations (memory saver, reduced cache)
 - Multi-platform support (Linux, Windows, macOS)
+- **Interactive TUI with profiles and help system**
 
-## Installation
-
-### Quick Start (Linux)
+## Quick Start
 
 ```bash
+# Linux/macOS - launches interactive TUI by default
 sudo python3 src/main.py
-```
 
-### Quick Start (Windows)
-
-Run as Administrator:
-```powershell
+# Windows (Run as Administrator)
 python src\main.py
 ```
 
-### Quick Start (macOS)
+Running without arguments automatically launches the interactive TUI:
 
-```bash
-sudo python3 src/main.py
+```
+ ███████╗███████╗██████╗  ██████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗███████╗
+ ╚══███╔╝██╔════╝██╔══██╗██╔═══██╗██╔══██╗██╔══██╗██╔══██╗██║   ██║██╔════╝
+   ███╔╝ █████╗  ██████╔╝██║   ██║██████╔╝██████╔╝███████║██║   ██║█████╗  
+  ███╔╝  ██╔══╝  ██╔══██╗██║   ██║██╔══██╗██╔══██╗██╔══██║╚██╗ ██╔╝██╔══╝  
+ ███████╗███████╗██║  ██║╚██████╔╝██████╔╝██║  ██║██║  ██║ ╚████╔╝ ███████╗
+ ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝
 ```
 
-## Usage
+### TUI Commands
+
+| Key | Action |
+|-----|--------|
+| `1-8` | Toggle policy category |
+| `S` | Strict profile (all ON) |
+| `B` | Balanced profile |
+| `M` | Minimal profile |
+| `?` | Help |
+| `P` | Preview JSON |
+| `ENTER` | Apply policies |
+| `Q` | Quit |
+
+## CLI Mode
+
+For scripts and automation, use CLI arguments:
 
 ```bash
-# Apply policies (requires sudo/admin)
-sudo python3 src/main.py
-
 # Preview changes without applying
 python3 src/main.py --dry-run
 
@@ -56,6 +69,7 @@ sudo python3 src/main.py --local ./my-policies.json
 
 | Option | Description |
 |--------|-------------|
+| `-i, --interactive` | Force interactive TUI |
 | `-n, --dry-run` | Show what would be done without making changes |
 | `-b, --backup` | Create backup of existing policies |
 | `-r, --restore` | Restore the most recent backup |

@@ -2,6 +2,24 @@
 
 All notable changes to ZeroBrave will be documented in this file.
 
+## [1.2.0] - 2026-01-17 (by @vodtinker)
+
+### Added
+- **Interactive TUI** with `rich` library - now launches by default!
+- Auto-detection: TUI starts automatically in interactive terminals
+- 3D ASCII banner with intro/exit animations
+- 8 policy categories with toggle controls (keys 1-8)
+- **Predefined profiles**: Strict (S), Balanced (B), Minimal (M)
+- Contextual help system (? for general, ?1-8 for category-specific)
+- Live preview of JSON policies before applying (P)
+- Change indicator showing modifications in current session
+- `NO_COLOR` environment variable support for accessibility
+- New policies: Camera, Microphone, ScreenCapture, BraveTalk
+
+### Changed
+- New dependency: `rich>=13.0.0`
+- 61 total policies (up from 57)
+
 ## [1.1.2] - 2026-01-17 (by @vodtinker)
 
 ### Added
