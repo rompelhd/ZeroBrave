@@ -281,6 +281,45 @@ def validate_policies(policies: dict) -> list[str]:
         warnings.append("Policies must be a JSON object")
         return warnings
     
+    # Expected types for known policies
+    expected_types = {
+        # Booleans
+        "BraveAIChatEnabled": bool,
+        "BlockThirdPartyCookies": bool,
+        "MetricsReportingEnabled": bool,
+        "SyncDisabled": bool,
+        "PasswordManagerEnabled": bool,
+        "TranslateEnabled": bool,
+        "SpellcheckEnabled": bool,
+        "QuicAllowed": bool,
+        "AutoplayAllowed": bool,
+        "ComponentUpdatesEnabled": bool,
+        # Integers
+        "SafeBrowsingProtectionLevel": int,
+        "HelpMeWriteSettings": int,
+        "GeminiSettings": int,
+        "GenAiDefaultSettings": int,
+        "DefaultCookiesSetting": int,
+        "DefaultGeolocationSetting": int,
+        "DefaultNotificationsSetting": int,
+        "BrowserSignin": int,
+        "DiskCacheSize": int,
+        # Strings
+        "WebRtcIPHandling": str,
+        "DnsOverHttpsMode": str,
+        # Lists
+        "CookiesSessionOnlyForUrls": list,
+    }
+    
+    # Validate types for known policies
+    for key, expected_type in expected_types.items():
+        if key in policies:
+            value = policies[key]
+            if not isinstance(value, expected_type):
+                warnings.append(
+                    f"'{key}' should be {expected_type.__name__}, got {type(value).__name__}"
+                )
+    
     # Check for potentially dangerous settings
     if policies.get("ComponentUpdatesEnabled") is False:
         warnings.append(
