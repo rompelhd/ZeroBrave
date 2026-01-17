@@ -88,6 +88,58 @@ class TestValidatePolicies:
         
         assert len(warnings) == 1
         assert "JSON object" in warnings[0]
+    
+    def test_warns_on_wrong_bool_type(self):
+        """Should warn when a boolean policy has wrong type."""
+        policies = {"BraveAIChatEnabled": "false"}  # string instead of bool
+        
+        warnings = validate_policies(policies)
+        
+        assert len(warnings) == 1
+        assert "BraveAIChatEnabled" in warnings[0]
+        assert "bool" in warnings[0]
+        assert "str" in warnings[0]
+    
+    def test_warns_on_wrong_int_type(self):
+        """Should warn when an integer policy has wrong type."""
+        policies = {"SafeBrowsingProtectionLevel": "2"}  # string instead of int
+        
+        warnings = validate_policies(policies)
+        
+        assert len(warnings) == 1
+        assert "SafeBrowsingProtectionLevel" in warnings[0]
+        assert "int" in warnings[0]
+    
+    def test_warns_on_wrong_string_type(self):
+        """Should warn when a string policy has wrong type."""
+        policies = {"WebRtcIPHandling": 123}  # int instead of string
+        
+        warnings = validate_policies(policies)
+        
+        assert len(warnings) == 1
+        assert "WebRtcIPHandling" in warnings[0]
+        assert "str" in warnings[0]
+    
+    def test_warns_on_wrong_list_type(self):
+        """Should warn when a list policy has wrong type."""
+        policies = {"CookiesSessionOnlyForUrls": "*"}  # string instead of list
+        
+        warnings = validate_policies(policies)
+        
+        assert len(warnings) == 1
+        assert "CookiesSessionOnlyForUrls" in warnings[0]
+        assert "list" in warnings[0]
+    
+    def test_multiple_type_errors(self):
+        """Should return multiple warnings for multiple type errors."""
+        policies = {
+            "BraveAIChatEnabled": "false",
+            "SafeBrowsingProtectionLevel": "2",
+        }
+        
+        warnings = validate_policies(policies)
+        
+        assert len(warnings) == 2
 
 
 class TestFindLatestBackup:
