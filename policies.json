@@ -79,8 +79,8 @@
   // ===== PERMISSIONS (all blocked by default) =====
   "DefaultCookiesSetting": 4, // 4=Block third-party cookies
   "CookiesSessionOnlyForUrls": [
-    "[*.]*"
-  ], // Clear cookies on session end
+    "*"
+  ], // Clear cookies on session end for all sites
   "DefaultJavaScriptSetting": 1, // 1=Allow JavaScript
   "DefaultGeolocationSetting": 2, // 2=Block geolocation
   "DefaultNotificationsSetting": 2, // 2=Block notifications
