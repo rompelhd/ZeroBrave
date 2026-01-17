@@ -6,13 +6,14 @@ This tool downloads and applies privacy-enhancing policies to Brave Browser,
 disabling telemetry, AI features, and other privacy-invasive functionality.
 """
 
-import argparse 
+import argparse
 import json
 import logging
 import os
 import platform
 import re
 import shutil
+import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -46,6 +47,40 @@ def get_policy_paths() -> dict[str, Path]:
         "darwin": Path.home() / "Library/Application Support/BraveSoftware/Brave-Browser/policies/managed/policies.json",
     }
 
+def is_brave_flatpak() -> bool:
+    try:
+        result = subprocess.run(
+            ["flatpak", "info", "com.brave.Browser"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        return result.returncode == 0
+    except FileNotFoundError:
+        return False
+
+def ask_yes_no(msg: str) -> bool:
+    """Ask user a yes/no question via input and return True for 'y'."""
+    response = input(f"{msg} [y/N]: ").strip().lower()
+    if response == "y":
+        logger.debug(f"User answered YES to: {msg}")
+    else:
+        logger.debug(f"User answered NO to: {msg}")
+    return response == "y"
+
+def grant_flatpak_permission():
+    """Grant Brave Flatpak access to /etc/brave using flatpak override."""
+    logger.info("Applying Flatpak override for Brave...")
+    subprocess.run(
+        [
+            "flatpak",
+            "override",
+            "--system",
+            "com.brave.Browser",
+            "--filesystem=/etc/brave",
+        ],
+        check=True,
+    )
+    logger.info("Flatpak permission granted.")
 
 def get_policy_path() -> Path:
     """
@@ -468,6 +503,17 @@ def main() -> int:
         # Write policies
         write_json(target_path, policies, dry_run=args.dry_run)
         
+        # Flatpak support (Linux only)
+        if platform.system().lower() == "linux" and is_brave_flatpak():
+            logger.info("Brave is installed as a Flatpak.")
+            if ask_yes_no("Grant Flatpak access to /etc/brave so policies can be applied?"):
+                grant_flatpak_permission()
+                logger.info("Please restart Brave for changes to take effect.")
+            else:
+                logger.warning(
+                    "Without this permission, Brave Flatpak will not read system policies."
+                )
+        
         if not args.dry_run:
             logger.info("✓ Policies applied successfully!")
             logger.info("→ Restart Brave browser for changes to take effect.")
@@ -486,7 +532,6 @@ def main() -> int:
     except Exception as e:
         logger.exception(f"Unexpected error: {e}")
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())
