@@ -20,7 +20,7 @@ from typing import Optional
 import urllib.error
 import urllib.request
 
-__version__ = "1.1.0"
+__version__ = "1.1.2"
 
 SOURCE_URL = "https://raw.githubusercontent.com/rompelhd/ZeroBrave/refs/heads/main/policies.json"
 REQUEST_TIMEOUT = 10  # seconds until the request times out
@@ -470,12 +470,15 @@ def main() -> int:
         
         if not args.dry_run:
             logger.info("✓ Policies applied successfully!")
-            logger.info("X Restart Brave browser for changes to take effect.")
+            logger.info("→ Restart Brave browser for changes to take effect.")
         
         return 0
         
     except RuntimeError as e:
         logger.error(str(e))
+        return 1
+    except PermissionError:
+        logger.error("Permission denied. Run with sudo/admin rights.")
         return 1
     except KeyboardInterrupt:
         logger.info("\nOperation cancelled.")

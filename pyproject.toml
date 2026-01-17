@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "zerobrave"
-version = "1.1.0"
+version = "1.1.2"
 description = "Privacy-focused policy configurator for Brave Browser"
 readme = "README.md"
 license = {text = "Apache-2.0"}
@@ -27,7 +27,7 @@ classifiers = [
     "Topic :: Security",
     "Topic :: Internet :: WWW/HTTP :: Browsers",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = []
 
 [project.urls]
@@ -36,10 +36,11 @@ Repository = "https://github.com/rompelhd/ZeroBrave"
 Issues = "https://github.com/rompelhd/ZeroBrave/issues"
 
 [project.scripts]
-zerobrave = "src.main:main"
+zerobrave = "zerobrave.main:main"
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
+include = ["zerobrave*"]
 
 [tool.ruff]
 line-length = 100

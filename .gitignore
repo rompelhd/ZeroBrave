@@ -36,4 +36,4 @@ ENV/
 Thumbs.db
 
 # Backups created by ZeroBrave
-*.backup
+*.backup_*

@@ -1,4 +1,4 @@
-# ZeroBrave **v1.1.0**
+# ZeroBrave **v1.1.2**
 
 Privacy-focused policy configurator for **Brave Browser**. Disables telemetry, AI features (Leo), and other privacy-invasive settings automatically.
 
